@@ -12,6 +12,7 @@ type UserType = {
 type AuthContextType = {
   user?: UserType;
   isLoading: boolean;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,8 +20,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data, isLoading } = useAuth();
   const user = data?.data;
+  const isAuthenticated = !!user;
   return (
-    <AuthContext.Provider value={{ user, isLoading }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../utils/HttpError";
 import { z } from "zod";
+import { config } from "../config/app.config";
 
 const formatZodError = (res: Response, error: z.ZodError) => {
   const errors = error?.issues?.map((err) => ({
@@ -13,6 +14,8 @@ const formatZodError = (res: Response, error: z.ZodError) => {
   });
 };
 
+const REFRESH_PATH = `${config.BASE_PATH}/auth/refresh`;
+
 export const errorHandler = (
   err: Error,
   req: Request,
@@ -20,6 +23,10 @@ export const errorHandler = (
   _next: NextFunction
 ) => {
   console.error(`Error occurred on PATH: ${req.path}`, err);
+
+  if (req.path === REFRESH_PATH) {
+    res.clearCookie("accessToken").clearCookie("refreshToken");
+  }
 
   if (err instanceof SyntaxError) {
     return res.status(400).json({

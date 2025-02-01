@@ -9,12 +9,7 @@ const QueryProvider = ({ children }: QueryProviderProps) => {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
-        retry: (failureCount, error) => {
-          if (failureCount < 2 && error?.message === "Network Error") {
-            return true;
-          }
-          return false;
-        },
+        retry: false,
         retryDelay: 0,
       },
     },

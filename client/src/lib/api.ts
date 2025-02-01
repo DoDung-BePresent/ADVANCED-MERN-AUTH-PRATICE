@@ -26,3 +26,5 @@ export const getCurrentUserQueryFn = async () => {
   const res = await API.get(`/user/current`);
   return res.data;
 };
+
+export const logoutMutationFn = async () => await API.post(`/auth/logout`);

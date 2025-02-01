@@ -1,4 +1,8 @@
+import { useAuthContext } from "@/context/auth-provider";
+
 const Home = () => {
+  const { user } = useAuthContext();
+  console.log(user);
   return <div>Home</div>;
 };
 

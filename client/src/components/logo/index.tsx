@@ -26,7 +26,10 @@ const LogoIcon = ({
         className
       )}
     >
-      <span style={{ fontSize: fontSize }} className="font-bold text-gray-50">
+      <span
+        style={{ fontSize: fontSize }}
+        className="font-bold text-gray-50 dark:text-black"
+      >
         S
       </span>
     </Link>

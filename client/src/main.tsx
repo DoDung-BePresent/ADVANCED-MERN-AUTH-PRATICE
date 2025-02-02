@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.tsx";
 import QueryProvider from "./context/query-provider.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
+import { ThemeProvider } from "./context/theme-provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
-      <App />
-      <Toaster />
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <App />
+        <Toaster />
+      </ThemeProvider>
     </QueryProvider>
   </StrictMode>
 );

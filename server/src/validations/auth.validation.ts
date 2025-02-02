@@ -23,3 +23,8 @@ export const loginSchema = z.object({
   email: emailSchema,
   password: z.string().trim().min(1).max(255),
 });
+
+export const resetPasswordSchema = z.object({
+  password: z.string().trim().min(6).max(255),
+  verificationCode: z.string().trim().min(1).max(25),
+});

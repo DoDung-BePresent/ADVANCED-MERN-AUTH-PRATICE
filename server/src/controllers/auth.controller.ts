@@ -1,9 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { loginSchema, registerSchema } from "../validations/auth.validation";
 import {
+  emailSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "../validations/auth.validation";
+import {
+  forgotPasswordService,
   loginUserService,
   refreshTokenService,
   registerUserService,
+  resetPasswordService,
 } from "../services/auth.service";
 import { config } from "../config/app.config";
 import ms from "ms";
@@ -127,6 +134,44 @@ export const refreshToken = async (
 
     return res.status(200).json({
       message: "Refresh access token successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const email = emailSchema.parse(req.body.email);
+
+    const { url } = await forgotPasswordService({ email });
+
+    return res.status(200).json({
+      message: "Password reset email sent",
+      data: url,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body = resetPasswordSchema.parse(req.body);
+
+    const { user } = await resetPasswordService(body);
+
+    return res.status(200).json({
+      message: "Reset password successfully",
+      data: user,
     });
   } catch (error) {
     next(error);

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, LoaderCircleIcon } from "lucide-react";
+import { LoaderCircleIcon } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import LogoIcon from "@/components/login";
+import LogoIcon from "@/components/logo";
 
 import { toast } from "@/hooks/use-toast";
 import { SignInSchema } from "@/validations/auth";
@@ -57,7 +57,7 @@ const Login = () => {
   };
 
   return (
-    <main className="max-w-md w-full">
+    <div className="max-w-md w-full">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
         <h1 className="font-bold text-xl tracking-tight mb-1">
@@ -65,7 +65,10 @@ const Login = () => {
         </h1>
         <p>
           Don't have an account?{" "}
-          <Link to="/sign-up" className="text-primary hover:underline">
+          <Link
+            to="/sign-up"
+            className="text-primary underline underline-offset-2"
+          >
             Sign up
           </Link>
           .
@@ -117,11 +120,10 @@ const Login = () => {
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending && <LoaderCircleIcon className="animate-spin" />}
             Sign In
-            {!isPending && <ArrowRight />}
           </Button>
         </form>
       </Form>
-    </main>
+    </div>
   );
 };
 

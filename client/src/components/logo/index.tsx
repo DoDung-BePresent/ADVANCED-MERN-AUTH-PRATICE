@@ -22,7 +22,7 @@ const LogoIcon = ({
         height: size,
       }}
       className={cn(
-        "border-2 flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-primary to-90%",
+        "border-2 flex items-center justify-center rounded-lg bg-primary",
         className
       )}
     >

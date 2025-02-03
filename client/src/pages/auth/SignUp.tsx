@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SignUpSchema } from "@/validations/auth";
+import { signUpSchema } from "@/validations/auth";
 
 import {
   Form,
@@ -27,15 +27,15 @@ const SignUp = () => {
     mutationFn: registerMutationFn,
   });
 
-  const form = useForm<z.infer<typeof SignUpSchema>>({
-    resolver: zodResolver(SignUpSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof SignUpSchema>) => {
+  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
     mutate(values, {
       onSuccess: () => {
         navigate("/sign-in");

@@ -12,6 +12,15 @@ type RegisterType = {
   confirmPassword: string;
 };
 
+type ForgotPassword = {
+  email: string;
+};
+
+type ResetPassword = {
+  password: string;
+  verificationCode: string;
+};
+
 export const loginMutationFn = async (data: LoginType) => {
   const res = await API.post(`/auth/login`, data);
   return res.data;
@@ -28,3 +37,13 @@ export const getCurrentUserQueryFn = async () => {
 };
 
 export const logoutMutationFn = async () => await API.post(`/auth/logout`);
+
+export const forgotPasswordMutationFn = async (data: ForgotPassword) => {
+  const res = await API.post(`/auth/password/forgot`, data);
+  return res.data;
+};
+
+export const resetPasswordMutationFn = async (data: ResetPassword) => {
+  const res = await API.post(`/auth/password/reset`, data);
+  return res.data;
+};

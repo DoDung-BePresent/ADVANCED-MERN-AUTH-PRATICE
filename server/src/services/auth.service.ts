@@ -6,6 +6,8 @@ import { HttpError } from "../utils/HttpError";
 import { config } from "../config/app.config";
 import VerificationModel from "../models/verification.model";
 import { hashValue } from "../utils/bcryptjs";
+import { sendEmail } from "../mailers/mailer";
+import { passwordResetTemplate } from "../mailers/templates/auth.template";
 
 type RegisterType = {
   name: string;
@@ -136,8 +138,18 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordType) => {
     validCode.code
   }&exp=${expiresAt.getTime()}`;
 
+  const { data, error } = await sendEmail({
+    to: user.email,
+    ...passwordResetTemplate(resetLink),
+  });
+
+  if (!data?.id) {
+    throw new HttpError(500, `${error?.name} ${error?.message}`);
+  }
+
   return {
     url: resetLink,
+    emailId: data.id,
   };
 };
 

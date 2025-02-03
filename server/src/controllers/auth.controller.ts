@@ -148,11 +148,10 @@ export const forgotPassword = async (
   try {
     const email = emailSchema.parse(req.body.email);
 
-    const { url } = await forgotPasswordService({ email });
+    await forgotPasswordService({ email });
 
     return res.status(200).json({
       message: "Password reset email sent",
-      data: url,
     });
   } catch (error) {
     next(error);

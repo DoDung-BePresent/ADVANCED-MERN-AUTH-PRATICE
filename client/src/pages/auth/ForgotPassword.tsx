@@ -1,48 +1,47 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
 import { LoaderCircleIcon } from "lucide-react";
-
+import { useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
+import LogoIcon from "@/components/logo";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import LogoIcon from "@/components/logo";
 
 import { toast } from "@/hooks/use-toast";
-import { signInSchema } from "@/validations/auth";
-import { loginMutationFn } from "@/lib/api";
+import { forgotPasswordMutationFn } from "@/lib/api";
+import { forgotPasswordSchema } from "@/validations/auth";
 
-const Login = () => {
-  const navigate = useNavigate();
+const ForgotPassword = () => {
+  const [param] = useSearchParams();
+  const email = param.get("email");
+
   const { mutate, isPending } = useMutation({
-    mutationFn: loginMutationFn,
+    mutationFn: forgotPasswordMutationFn,
   });
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: email || "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signInSchema>) => {
+  const onSubmit = (values: z.infer<typeof forgotPasswordSchema>) => {
     mutate(values, {
       onSuccess: () => {
-        navigate("/");
         toast({
           title: "Success",
-          description: "Login successfully!",
+          description: "Please check your email!",
         });
       },
       onError: (error: any) => {
@@ -55,23 +54,16 @@ const Login = () => {
       },
     });
   };
-
   return (
     <div className="max-w-md w-full">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
         <h1 className="font-bold text-xl tracking-tight mb-1">
-          Login to Squeezy
+          Reset password
         </h1>
-        <p>
-          Don't have an account?{" "}
-          <Link
-            to="/sign-up"
-            className="text-primary underline underline-offset-2"
-          >
-            Sign up
-          </Link>
-          .
+        <p className="">
+          Include the email address associated with your account and we’ll send
+          you an email with instructions to reset your password.
         </p>
       </div>
       <Form {...form}>
@@ -94,35 +86,9 @@ const Login = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    type="password"
-                    placeholder="••••••••••••"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="text-right">
-            <Link
-              to={`/forgot-password?email=${form.getValues().email}`}
-              className="hover:underline text-sm font-medium"
-            >
-              Forgot your password?
-            </Link>
-          </div>
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending && <LoaderCircleIcon className="animate-spin" />}
-            Sign In
+            Send reset email
           </Button>
         </form>
       </Form>
@@ -130,4 +96,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

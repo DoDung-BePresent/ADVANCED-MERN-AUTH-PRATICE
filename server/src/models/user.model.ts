@@ -1,12 +1,29 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { compareValue, hashValue } from "../utils/bcryptjs";
 
-interface UserDocument extends Document {
+interface UserPreferences {
+  enable2FA: boolean;
+  twoFactorSecret?: string;
+}
+
+export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
+  userPreferences: UserPreferences;
   comparePassword: (password: string) => Promise<boolean>;
 }
+
+const userPreferencesSchema = new Schema<UserPreferences>({
+  enable2FA: {
+    type: Boolean,
+    default: false,
+  },
+  twoFactorSecret: {
+    type: String,
+    required: false,
+  },
+});
 
 const userSchema = new Schema<UserDocument>(
   {
@@ -22,6 +39,10 @@ const userSchema = new Schema<UserDocument>(
     password: {
       type: String,
       required: true,
+    },
+    userPreferences: {
+      type: userPreferencesSchema,
+      default: {}, // if not, this userPreferences field will not visible!
     },
   },
   {

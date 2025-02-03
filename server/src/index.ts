@@ -10,6 +10,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./routes/auth.route";
 import connectDatabase from "./config/database.config";
 import userRoutes from "./routes/user.route";
+import mfaRoutes from "./routes/mfa.route";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
 app.use(`${config.BASE_PATH}/auth`, authRoutes);
 app.use(`${config.BASE_PATH}/user`, userRoutes);
+app.use(`${config.BASE_PATH}/mfa`, mfaRoutes);
 
 app.use(errorHandler);
 

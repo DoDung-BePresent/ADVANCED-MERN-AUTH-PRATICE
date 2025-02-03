@@ -7,7 +7,11 @@ export const getCurrentUser = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.user?._id;
+    const userId = req.user?._id?.toString();
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
 
     const { user } = await getCurrentUserService(userId);
 

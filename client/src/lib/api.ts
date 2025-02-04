@@ -27,6 +27,11 @@ type MfaType = {
   qrCodeUrl: string;
 };
 
+type VerifyMFAType = {
+  code: string;
+  secretKey: string;
+};
+
 export const loginMutationFn = async (data: LoginType) => {
   const res = await API.post(`/auth/login`, data);
   return res.data;
@@ -56,5 +61,10 @@ export const resetPasswordMutationFn = async (data: ResetPassword) => {
 
 export const mfaSetupQueryFn = async () => {
   const res = await API.get<MfaType>(`/mfa/setup`);
+  return res.data;
+};
+
+export const verifyMFAMutationFn = async (data: VerifyMFAType) => {
+  const res = await API.post(`/mfa/verify`, data);
   return res.data;
 };

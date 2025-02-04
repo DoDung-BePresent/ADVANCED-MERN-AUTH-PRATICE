@@ -7,6 +7,9 @@ type UserType = {
   email: string;
   createdAt: Date;
   updatedAt: Date;
+  userPreferences: {
+    enable2FA: boolean;
+  };
 };
 
 type AuthContextType = {

@@ -30,15 +30,10 @@ export const verifyMFASetup = async (
 ) => {
   try {
     const { code, secretKey } = verifyMfaSchema.parse(req.body);
-    const { userPreferences } = await verifyMFASetupService(
-      req,
-      code,
-      secretKey
-    );
+    await verifyMFASetupService(req, code, secretKey);
 
     return res.status(200).json({
       message: "MFA setup completed successfully",
-      userPreferences,
     });
   } catch (error) {
     next(error);

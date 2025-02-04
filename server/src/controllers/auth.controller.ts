@@ -106,13 +106,23 @@ export const logoutUser = async (
   next: NextFunction
 ) => {
   try {
-    return res
-      .clearCookie("accessToken")
-      .clearCookie("refreshToken")
-      .status(200)
-      .json({
-        message: "User logout successfully",
-      });
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "lax",
+      path: `${config.BASE_PATH}/auth/refresh`,
+    });
+
+    return res.status(200).json({
+      message: "User logout successfully",
+    });
   } catch (error) {
     next(error);
   }

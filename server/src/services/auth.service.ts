@@ -98,7 +98,7 @@ export const refreshTokenService = async ({
     userId: string;
   };
 
-  const accessToken = jwt.sign({ userId: userId }, config.ACCESS_TOKEN_SECRET, {
+  const accessToken = jwt.sign({ userId }, config.ACCESS_TOKEN_SECRET, {
     expiresIn: config.ACCESS_TOKEN_EXPIRY as StringValue,
   });
 

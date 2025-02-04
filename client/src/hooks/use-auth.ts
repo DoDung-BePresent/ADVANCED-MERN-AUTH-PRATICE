@@ -5,8 +5,7 @@ const useAuth = () => {
   const query = useQuery({
     queryKey: ["authUser"],
     queryFn: getCurrentUserQueryFn,
-    // retry: 1,
-    staleTime: 1000 * 60 * 5,
+    staleTime: Infinity,
   });
   return query;
 };

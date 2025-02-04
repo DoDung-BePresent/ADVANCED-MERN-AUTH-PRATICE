@@ -25,7 +25,9 @@ export const errorHandler = (
   console.error(`Error occurred on PATH: ${req.path}`, err);
 
   if (req.path === REFRESH_PATH) {
-    res.clearCookie("accessToken").clearCookie("refreshToken");
+    res
+      .clearCookie("accessToken", { path: "/" })
+      .clearCookie("refreshToken", { path: REFRESH_PATH });
   }
 
   if (err instanceof SyntaxError) {

@@ -46,14 +46,15 @@ export const loginUser = async (
 
     const { user, accessToken, refreshToken } = await loginUserService(body);
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: config.NODE_ENV === "production",
-      sameSite:
-        config.NODE_ENV === "production"
-          ? ("strict" as const)
-          : ("lax" as const),
-    };
+    // const cookieOptions = {
+    //   httpOnly: true,
+    //   secure: config.NODE_ENV === "production",
+    //   sameSite:
+    //     config.NODE_ENV === "production"
+    //       ? ("strict" as const)
+    //       : ("lax" as const),
+    //       path: "/"
+    // };
 
     const accessTokenExpiry = ms(
       (config.ACCESS_TOKEN_EXPIRY as StringValue) || "15m"
@@ -63,13 +64,30 @@ export const loginUser = async (
       (config.REFRESH_TOKEN_EXPIRY as StringValue) || "30d"
     );
 
+    // res.cookie("accessToken", accessToken, {
+    //   ...cookieOptions,
+    //   maxAge: accessTokenExpiry,
+    // });
+
+    // res.cookie("refreshToken", refreshToken, {
+    //   ...cookieOptions,
+    //   maxAge: refreshTokenExpiry,
+    // });
+
+    // Set cookie với đầy đủ options
     res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "lax", // Hoặc "none" trong production
+      path: "/", // Đảm bảo cookie available cho toàn bộ domain
       maxAge: accessTokenExpiry,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "lax",
+      path: `${config.BASE_PATH}/auth/refresh`, // Path specific cho refresh route
       maxAge: refreshTokenExpiry,
     });
 
@@ -114,21 +132,15 @@ export const refreshToken = async (
 
     const { accessToken } = await refreshTokenService({ refreshToken });
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: config.NODE_ENV === "production",
-      sameSite:
-        config.NODE_ENV === "production"
-          ? ("strict" as const)
-          : ("lax" as const),
-    };
-
     const accessTokenExpiry = ms(
       (config.ACCESS_TOKEN_EXPIRY as StringValue) || "15m"
     );
 
     res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "lax", // hoặc "none" trong production với HTTPS
+      path: "/", // Đảm bảo cookie available cho toàn bộ domain
       maxAge: accessTokenExpiry,
     });
 

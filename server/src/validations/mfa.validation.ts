@@ -5,3 +5,7 @@ export const verifyMfaSchema = z.object({
   secretKey: z.string().trim().min(1),
 });
 
+export const verifyMfaForLoginSchema = z.object({
+  code: z.string().trim().min(1).max(6),
+  email: z.string().trim().email("Invalid email address").min(1),
+});

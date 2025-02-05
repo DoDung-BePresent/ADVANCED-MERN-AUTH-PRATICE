@@ -70,6 +70,15 @@ export const loginUserService = async ({ email, password }: LoginType) => {
     throw new HttpError(400, "Invalid email or password");
   }
 
+  if (user.userPreferences.enable2FA) {
+    return {
+      user: null,
+      accessToken: "",
+      refreshToken: "",
+      mfaRequired: true,
+    };
+  }
+
   const accessToken = jwt.sign(
     { userId: user._id },
     config.ACCESS_TOKEN_SECRET,

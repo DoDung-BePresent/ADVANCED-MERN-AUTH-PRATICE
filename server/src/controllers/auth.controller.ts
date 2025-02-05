@@ -44,17 +44,17 @@ export const loginUser = async (
   try {
     const body = loginSchema.parse(req.body);
 
-    const { user, accessToken, refreshToken } = await loginUserService(body);
+    const { user, accessToken, refreshToken, mfaRequired } =
+      await loginUserService(body);
 
-    // const cookieOptions = {
-    //   httpOnly: true,
-    //   secure: config.NODE_ENV === "production",
-    //   sameSite:
-    //     config.NODE_ENV === "production"
-    //       ? ("strict" as const)
-    //       : ("lax" as const),
-    //       path: "/"
-    // };
+    if (mfaRequired) {
+      return res.status(200).json({
+        message: "Verify MFA authentication",
+        data: {
+          mfaRequired: mfaRequired,
+        },
+      });
+    }
 
     const accessTokenExpiry = ms(
       (config.ACCESS_TOKEN_EXPIRY as StringValue) || "15m"
@@ -63,16 +63,6 @@ export const loginUser = async (
     const refreshTokenExpiry = ms(
       (config.REFRESH_TOKEN_EXPIRY as StringValue) || "30d"
     );
-
-    // res.cookie("accessToken", accessToken, {
-    //   ...cookieOptions,
-    //   maxAge: accessTokenExpiry,
-    // });
-
-    // res.cookie("refreshToken", refreshToken, {
-    //   ...cookieOptions,
-    //   maxAge: refreshTokenExpiry,
-    // });
 
     // Set cookie với đầy đủ options
     res.cookie("accessToken", accessToken, {

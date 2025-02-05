@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { ArrowLeft, Frown, LoaderCircleIcon } from "lucide-react";
+import { Frown, LoaderCircleIcon } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";

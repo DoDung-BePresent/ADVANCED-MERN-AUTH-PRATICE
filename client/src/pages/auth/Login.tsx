@@ -38,7 +38,11 @@ const Login = () => {
 
   const onSubmit = (values: z.infer<typeof signInSchema>) => {
     mutate(values, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        if (res.data?.mfaRequired) {
+          navigate(`/verify-mfa?email=${values.email}`);
+          return;
+        }
         navigate("/");
         toast({
           title: "Success",

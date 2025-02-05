@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import LogoIcon from "@/components/logo";
 import { Input } from "@/components/ui/input";
@@ -61,7 +61,7 @@ const ForgotPassword = () => {
         <h1 className="font-bold text-xl tracking-tight mb-1">
           Reset password
         </h1>
-        <p className="">
+        <p className="text-muted-foreground">
           Include the email address associated with your account and we’ll send
           you an email with instructions to reset your password.
         </p>

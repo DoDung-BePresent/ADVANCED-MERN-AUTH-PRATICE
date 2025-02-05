@@ -33,7 +33,7 @@ export const generateMFASetupService = async (req: Request) => {
 
   const url = speakeasy.otpauthURL({
     secret: secretKey, //🔑 Chuỗi bí mật (Secret Key) dùng để tạo mã OTP. Phải ở dạng Base32.
-    label: `${user.name}`, // 🏷️ Tên tài khoản hoặc user. Hiển thị trong ứng dụng xác thực (Google Authenticator).
+    label: `${user.email}`, // 🏷️ Tên tài khoản hoặc user. Hiển thị trong ứng dụng xác thực (Google Authenticator).
     issuer: "squeezy.com", // 🏢 Tên ứng dụng hoặc tổ chức. Dùng để phân biệt các ứng dụng khác nhau.
     encoding: "base32", // 🔡 Kiểu mã hóa secret ("base32", "hex", "ascii"). Mặc định nên dùng "base32" để tương thích với Google Authenticator.
   });
@@ -123,5 +123,27 @@ export const verifyMFAForLoginService = async (code: string, email: string) => {
     user,
     accessToken,
     refreshToken,
+  };
+};
+
+export const revokeMFAService = async (req: Request) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new HttpError(401, "User not authorized");
+  }
+
+  if (!user.userPreferences.enable2FA) {
+    throw new HttpError(400, "MFA is not enabled");
+  }
+
+  user.userPreferences.twoFactorSecret = undefined;
+  user.userPreferences.enable2FA = false;
+  await user.save();
+
+  return {
+    userPreferences: {
+      enable2FA: user.userPreferences.enable2FA,
+    },
   };
 };

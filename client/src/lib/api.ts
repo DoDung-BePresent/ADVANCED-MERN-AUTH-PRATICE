@@ -78,3 +78,8 @@ export const verifyMFALoginMutationFn = async (data: MfaLoginType) => {
   const res = await API.post(`/mfa/verify-login`, data);
   return res.data;
 };
+
+export const revokeMFAMutationFn = async () => {
+  const res = await API.put(`/mfa/revoke`);
+  return res.data;
+};

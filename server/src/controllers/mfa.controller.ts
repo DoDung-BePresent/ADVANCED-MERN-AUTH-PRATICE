@@ -3,6 +3,7 @@ import ms from "ms";
 import type { StringValue } from "ms";
 import {
   generateMFASetupService,
+  revokeMFAService,
   verifyMFAForLoginService,
   verifyMFASetupService,
 } from "../services/mfa.service";
@@ -88,6 +89,21 @@ export const verifyMFAForLogin = async (
     return res.status(200).json({
       message: "Login successfully",
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const revokeMFA = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await revokeMFAService(req);
+    return res.json({
+      message: "MFA revoke successfully",
     });
   } catch (error) {
     next(error);

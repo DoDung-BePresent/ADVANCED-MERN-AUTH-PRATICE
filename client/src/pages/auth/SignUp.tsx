@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { LoaderCircleIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -20,8 +19,11 @@ import LogoIcon from "@/components/logo";
 import { useMutation } from "@tanstack/react-query";
 import { registerMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import { useApiError } from "@/hooks/use-api-error";
+import { Loading } from "@/components/Loading";
 
 const SignUp = () => {
+  const { handleError } = useApiError();
   const navigate = useNavigate();
   const { mutate, isPending } = useMutation({
     mutationFn: registerMutationFn,
@@ -44,22 +46,15 @@ const SignUp = () => {
           description: "Register successfully. Please login to continue!",
         });
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
 
   return (
-    <div className="max-w-md w-full">
+    <div className="w-full max-w-md">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
-        <h1 className="font-bold text-xl tracking-tight mb-1">
+        <h1 className="mb-1 text-xl font-bold tracking-tight">
           Create a Squeezy account
         </h1>
         <p>
@@ -82,7 +77,12 @@ const SignUp = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input disabled={isPending} placeholder="Diana" {...field} />
+                  <Input
+                    autoFocus
+                    disabled={isPending}
+                    placeholder="Diana"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,7 +143,7 @@ const SignUp = () => {
             )}
           />
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <LoaderCircleIcon className="animate-spin" />}
+            {isPending && <Loading />}
             Sign In
           </Button>
         </form>

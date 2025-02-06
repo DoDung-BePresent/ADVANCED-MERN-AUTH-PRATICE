@@ -5,7 +5,7 @@ interface SessionProps {
   children: React.ReactNode;
 }
 
-const Session = ({ title, children, label, desc }: SessionProps) => {
+export const Session = ({ title, children, label, desc }: SessionProps) => {
   return (
     <div className="relative border-l-2 px-10">
       <div className="flex items-center gap-2">
@@ -20,5 +20,3 @@ const Session = ({ title, children, label, desc }: SessionProps) => {
     </div>
   );
 };
-
-export default Session;

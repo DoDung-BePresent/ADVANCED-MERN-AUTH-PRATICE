@@ -29,8 +29,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useApiError } from "@/hooks/use-api-error";
 
 const EnableMFA = () => {
+  const { handleError } = useApiError();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [showKey, setShowKey] = useState(false);
@@ -83,14 +85,7 @@ const EnableMFA = () => {
           description: data.message,
         });
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
   return (
@@ -119,34 +114,34 @@ const EnableMFA = () => {
         <div className="flex gap-4">
           <div className="shrink-0">
             {isLoading || !data?.qrCodeUrl ? (
-              <Skeleton className="w-40 h-40" />
+              <Skeleton className="h-40 w-40" />
             ) : (
-              <div className="rounded-md overflow-hidden border-2">
-                <img src={data.qrCodeUrl} alt="QR code" className="w-40 h-40" />
+              <div className="overflow-hidden rounded-md border-2">
+                <img src={data.qrCodeUrl} alt="QR code" className="h-40 w-40" />
               </div>
             )}
           </div>
-          <div className="space-y-2 flex-1 items-center justify-center flex flex-col">
+          <div className="flex flex-1 flex-col items-center justify-center space-y-2">
             {showKey ? (
               <div>
                 <div className="flex items-center gap-1">
                   <h1>Copy setup key</h1>
                   <button
-                    className="hover:bg-muted rounded-md p-1"
+                    className="rounded-md p-1 hover:bg-muted"
                     onClick={() => onCopy(data?.secretKey || "")}
                   >
                     {copied ? (
-                      <CheckIcon className="w-4 h-4" />
+                      <CheckIcon className="h-4 w-4" />
                     ) : (
-                      <CopyIcon className="w-4 h-4" />
+                      <CopyIcon className="h-4 w-4" />
                     )}
                   </button>
                 </div>
 
                 {isLoading || !data?.secretKey ? (
-                  <Skeleton className="w-52 h-3" />
+                  <Skeleton className="h-3 w-52" />
                 ) : (
-                  <p className="text-muted-foreground text-center text-wrap">
+                  <p className="text-wrap text-center text-muted-foreground">
                     {data?.secretKey}
                   </p>
                 )}
@@ -181,33 +176,33 @@ const EnableMFA = () => {
                         <InputOTPGroup>
                           <InputOTPSlot
                             index={0}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                           <InputOTPSlot
                             index={1}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                         </InputOTPGroup>
                         <InputOTPSeparator />
                         <InputOTPGroup>
                           <InputOTPSlot
                             index={2}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                           <InputOTPSlot
                             index={3}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                         </InputOTPGroup>
                         <InputOTPSeparator />
                         <InputOTPGroup>
                           <InputOTPSlot
                             index={4}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                           <InputOTPSlot
                             index={5}
-                            className="w-14 h-14 text-lg"
+                            className="h-14 w-14 text-lg"
                           />
                         </InputOTPGroup>
                       </InputOTP>

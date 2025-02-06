@@ -30,10 +30,11 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useAuthContext } from "@/context/auth-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logoutMutationFn } from "@/lib/api";
-import { toast } from "@/hooks/use-toast";
 import { useTheme } from "@/context/theme-provider";
+import { useApiError } from "@/hooks/use-api-error";
 
-const AppSidebar = () => {
+export const AppSidebar = () => {
+  const { handleError } = useApiError();
   const { user } = useAuthContext();
   const { theme, setTheme } = useTheme();
 
@@ -46,13 +47,7 @@ const AppSidebar = () => {
       navigate("/sign-in");
       queryClient.clear();
     },
-    onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error?.response?.data?.message || "Something went wrong!",
-        variant: "destructive",
-      });
-    },
+    onError: handleError,
   });
 
   const handleLogout = () => {
@@ -137,5 +132,3 @@ const AppSidebar = () => {
     </Sidebar>
   );
 };
-
-export default AppSidebar;

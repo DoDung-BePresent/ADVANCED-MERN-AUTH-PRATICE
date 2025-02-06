@@ -2,7 +2,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { LoaderCircleIcon } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,8 +20,11 @@ import LogoIcon from "@/components/logo";
 import { toast } from "@/hooks/use-toast";
 import { signInSchema } from "@/validations/auth";
 import { loginMutationFn } from "@/lib/api";
+import { useApiError } from "@/hooks/use-api-error";
+import { Loading } from "@/components/Loading";
 
 const Login = () => {
+  const { handleError } = useApiError();
   const navigate = useNavigate();
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
@@ -49,22 +51,15 @@ const Login = () => {
           description: "Login successfully!",
         });
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
 
   return (
-    <div className="max-w-md w-full">
+    <div className="w-full max-w-md">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
-        <h1 className="font-bold text-xl tracking-tight mb-1">
+        <h1 className="mb-1 text-xl font-bold tracking-tight">
           Login to Squeezy
         </h1>
         <p>
@@ -88,6 +83,7 @@ const Login = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    autoFocus
                     disabled={isPending}
                     type="email"
                     placeholder="demo123@gmail.com"
@@ -119,13 +115,13 @@ const Login = () => {
           <div className="text-right">
             <Link
               to={`/forgot-password?email=${form.getValues().email}`}
-              className="hover:underline text-sm font-medium"
+              className="text-sm font-medium hover:underline"
             >
               Forgot your password?
             </Link>
           </div>
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <LoaderCircleIcon className="animate-spin" />}
+            {isPending && <Loading />}
             Sign In
           </Button>
         </form>

@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { LoaderCircleIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -20,8 +19,11 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { forgotPasswordMutationFn } from "@/lib/api";
 import { forgotPasswordSchema } from "@/validations/auth";
+import { useApiError } from "@/hooks/use-api-error";
+import { Loading } from "@/components/Loading";
 
 const ForgotPassword = () => {
+  const { handleError } = useApiError();
   const [param] = useSearchParams();
   const email = param.get("email");
 
@@ -44,21 +46,14 @@ const ForgotPassword = () => {
           description: "Please check your email!",
         });
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
   return (
-    <div className="max-w-md w-full">
+    <div className="w-full max-w-md">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
-        <h1 className="font-bold text-xl tracking-tight mb-1">
+        <h1 className="mb-1 text-xl font-bold tracking-tight">
           Reset password
         </h1>
         <p className="text-muted-foreground">
@@ -76,6 +71,7 @@ const ForgotPassword = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    autoFocus
                     disabled={isPending}
                     type="email"
                     placeholder="demo123@gmail.com"
@@ -87,7 +83,7 @@ const ForgotPassword = () => {
             )}
           />
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <LoaderCircleIcon className="animate-spin" />}
+            {isPending && <Loading />}
             Send reset email
           </Button>
         </form>

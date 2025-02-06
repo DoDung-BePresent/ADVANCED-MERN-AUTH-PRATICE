@@ -1,6 +1,6 @@
 import EnableMFA from "@/components/mfa/EnableMFA";
 import RevokeMFA from "@/components/mfa/RevokeMFA";
-import Session from "@/components/Session";
+import { Session } from "@/components/Session";
 import { useAuthContext } from "@/context/auth-provider";
 
 const Home = () => {

@@ -1,16 +1,15 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { LoaderIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
 } from "@/components/ui/form";
 import LogoIcon from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -19,13 +18,16 @@ import { toast } from "@/hooks/use-toast";
 import { verifyMFALoginMutationFn } from "@/lib/api";
 import { pinMFASchema } from "@/validations/mfa";
 import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useApiError } from "@/hooks/use-api-error";
+import { Loading } from "@/components/Loading";
 
 const VerifyMfa = () => {
+  const { handleError } = useApiError();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const email = params.get("email");
@@ -60,21 +62,14 @@ const VerifyMfa = () => {
           description: "Login successfully!",
         });
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
   return (
-    <div className="max-w-md w-full">
+    <div className="w-full max-w-md">
       <div className="mb-4">
         <LogoIcon className="mb-4" />
-        <h1 className="font-bold text-xl tracking-tight mb-1">
+        <h1 className="mb-1 text-xl font-bold tracking-tight">
           Multi-Factor Authentication
         </h1>
         <p className="text-muted-foreground">
@@ -93,18 +88,18 @@ const VerifyMfa = () => {
                   <FormControl>
                     <InputOTP disabled={isPending} maxLength={6} {...field}>
                       <InputOTPGroup>
-                        <InputOTPSlot index={0} className="w-14 h-14 text-lg" />
-                        <InputOTPSlot index={1} className="w-14 h-14 text-lg" />
+                        <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
                       </InputOTPGroup>
                       <InputOTPSeparator />
                       <InputOTPGroup>
-                        <InputOTPSlot index={2} className="w-14 h-14 text-lg" />
-                        <InputOTPSlot index={3} className="w-14 h-14 text-lg" />
+                        <InputOTPSlot index={2} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={3} className="h-14 w-14 text-lg" />
                       </InputOTPGroup>
                       <InputOTPSeparator />
                       <InputOTPGroup>
-                        <InputOTPSlot index={4} className="w-14 h-14 text-lg" />
-                        <InputOTPSlot index={5} className="w-14 h-14 text-lg" />
+                        <InputOTPSlot index={4} className="h-14 w-14 text-lg" />
+                        <InputOTPSlot index={5} className="h-14 w-14 text-lg" />
                       </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
@@ -112,7 +107,7 @@ const VerifyMfa = () => {
               )}
             />
             <Button size="lg" className="w-full">
-              {isPending && <LoaderIcon className="animate-spin" />}
+              {isPending && <Loading />}
               Verify
             </Button>
           </form>

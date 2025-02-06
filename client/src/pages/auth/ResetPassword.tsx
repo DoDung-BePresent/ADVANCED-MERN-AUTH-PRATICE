@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { Frown, LoaderCircleIcon } from "lucide-react";
+import { Frown } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -20,8 +20,11 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { resetPasswordMutationFn } from "@/lib/api";
 import { resetPasswordSchema } from "@/validations/auth";
+import { useApiError } from "@/hooks/use-api-error";
+import { Loading } from "@/components/Loading";
 
 const ResetPassword = () => {
+  const { handleError } = useApiError();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const code = params.get("code");
@@ -61,23 +64,16 @@ const ResetPassword = () => {
         });
         navigate("/");
       },
-      onError: (error: any) => {
-        toast({
-          title: "Error",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-          variant: "destructive",
-        });
-      },
+      onError: handleError,
     });
   };
   return (
     <>
       {isValid ? (
-        <div className="max-w-md w-full">
+        <div className="w-full max-w-md">
           <div className="mb-4">
             <LogoIcon className="mb-4" />
-            <h1 className="font-bold text-xl tracking-tight mb-1">
+            <h1 className="mb-1 text-xl font-bold tracking-tight">
               Setup a new password
             </h1>
             <p className="">
@@ -94,6 +90,7 @@ const ResetPassword = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
+                        autoFocus
                         disabled={isPending}
                         type="password"
                         placeholder="••••••••••••"
@@ -123,16 +120,16 @@ const ResetPassword = () => {
                 )}
               />
               <Button disabled={isPending} type="submit" className="w-full">
-                {isPending && <LoaderCircleIcon className="animate-spin" />}
+                {isPending && <Loading />}
                 Reset password
               </Button>
             </form>
           </Form>
         </div>
       ) : (
-        <div className="w-full flex flex-col gap-2 items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center gap-2">
           <Frown size="48px" className="" />
-          <h2 className="text-xl tracking-[-0.16px] font-bold">
+          <h2 className="text-xl font-bold tracking-[-0.16px]">
             Invalid or expired reset link
           </h2>
           <p className="mb-2 text-center text-sm text-muted-foreground">

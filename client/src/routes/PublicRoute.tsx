@@ -1,5 +1,5 @@
+import { Loading } from "@/components/Loading";
 import useAuth from "@/hooks/use-auth";
-import { LoaderCircleIcon } from "lucide-react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PublicRoute = () => {
@@ -8,8 +8,8 @@ const PublicRoute = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <LoaderCircleIcon className="w-10 h-10 animate-spin text-primary" />
+      <div className="flex h-screen items-center justify-center">
+        <Loading className="h-10 w-10" />
       </div>
     );
   }

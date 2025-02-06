@@ -11,6 +11,7 @@ const QueryProvider = ({ children }: QueryProviderProps) => {
         refetchOnWindowFocus: false,
         retry: false,
         retryDelay: 0,
+        staleTime: 5 * 60 * 1000
       },
     },
   });

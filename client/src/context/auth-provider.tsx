@@ -1,4 +1,5 @@
-import useAuth from "@/hooks/use-auth";
+import { getCurrentUserQueryFn } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 
 type UserType = {
@@ -15,17 +16,21 @@ type UserType = {
 type AuthContextType = {
   user?: UserType;
   isLoading: boolean;
-  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data, isLoading } = useAuth();
+  const { data, isLoading } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: getCurrentUserQueryFn,
+    staleTime: Infinity,
+  });
+
   const user = data?.data;
-  const isAuthenticated = !!user;
+  console.log(user);
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

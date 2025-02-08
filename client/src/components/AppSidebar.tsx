@@ -32,6 +32,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logoutMutationFn } from "@/lib/api";
 import { useTheme } from "@/context/theme-provider";
 import { useApiError } from "@/hooks/use-api-error";
+import { toast } from "@/hooks/use-toast";
 
 export const AppSidebar = () => {
   const { handleError } = useApiError();
@@ -44,8 +45,12 @@ export const AppSidebar = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
+      queryClient.setQueryData(["authUser"], null);
       navigate("/sign-in");
-      queryClient.clear();
+      toast({
+        title: "Success",
+        description: "Logout successfully!",
+      });
     },
     onError: handleError,
   });

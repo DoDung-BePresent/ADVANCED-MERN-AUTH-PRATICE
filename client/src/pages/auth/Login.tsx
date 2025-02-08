@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,7 @@ import { Loading } from "@/components/Loading";
 
 const Login = () => {
   const { handleError } = useApiError();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
@@ -41,6 +42,7 @@ const Login = () => {
   const onSubmit = (values: z.infer<typeof signInSchema>) => {
     mutate(values, {
       onSuccess: (res) => {
+        queryClient.refetchQueries({ queryKey: ["authUser"] });
         if (res.data?.mfaRequired) {
           navigate(`/verify-mfa?email=${values.email}`);
           return;

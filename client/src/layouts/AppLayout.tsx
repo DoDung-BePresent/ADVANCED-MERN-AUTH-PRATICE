@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 
 const AppLayout = () => {
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <SidebarProvider>
         <AppSidebar />
         <main className="w-full">
@@ -15,7 +15,7 @@ const AppLayout = () => {
           <Outlet />
         </main>
       </SidebarProvider>
-    </AuthProvider>
+    // </AuthProvider>
   );
 };
 

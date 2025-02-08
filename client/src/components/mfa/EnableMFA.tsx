@@ -141,7 +141,7 @@ const EnableMFA = () => {
                 {isLoading || !data?.secretKey ? (
                   <Skeleton className="h-3 w-52" />
                 ) : (
-                  <p className="text-wrap text-center text-muted-foreground">
+                  <p className="break-all text-muted-foreground">
                     {data?.secretKey}
                   </p>
                 )}

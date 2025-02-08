@@ -1,10 +1,9 @@
 import { Loading } from "@/components/Loading";
-import useAuth from "@/hooks/use-auth";
+import { useAuthContext } from "@/context/auth-provider";
 import { Navigate, Outlet } from "react-router-dom";
 
 const AuthRoute = () => {
-  const { data, isLoading } = useAuth();
-  const user = data?.data;
+  const { user, isLoading } = useAuthContext();
 
   if (isLoading) {
     return (

@@ -14,29 +14,33 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import VerifyMfa from "./pages/main/VerifyMfa";
 
+import { AuthProvider } from "@/context/auth-provider";
+
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<PublicRoute />}>
-          <Route element={<BaseLayout />}>
-            <Route path="sign-in" element={<Login />} />
-            <Route path="sign-up" element={<SignUp />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="reset-password" element={<ResetPassword />} />
-            <Route path="verify-mfa" element={<VerifyMfa />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<PublicRoute />}>
+            <Route element={<BaseLayout />}>
+              <Route path="sign-in" element={<Login />} />
+              <Route path="sign-up" element={<SignUp />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="verify-mfa" element={<VerifyMfa />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route element={<AuthRoute />}>
-          <Route element={<AppLayout />}>
-            <Route index element={<Home />} />
+          <Route element={<AuthRoute />}>
+            <Route element={<AppLayout />}>
+              <Route index element={<Home />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

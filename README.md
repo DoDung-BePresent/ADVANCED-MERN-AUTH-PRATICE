@@ -65,8 +65,20 @@ cd server && npm install
 VITE_API_BASE_URL=http://localhost:8000/api/v1
 
 # Server
+PORT=8000
+NODE_ENV=development
+
 MONGO_URI=mongodb://localhost:27017/mern_db-practice
 RESEND_API_KEY=your_resend_key
+
+ACCESS_TOKEN_SECRET=""
+REFRESH_TOKEN_SECRET=""
+
+ACCESS_TOKEN_EXPIRY=""
+REFRESH_TOKEN_EXPIRY=""
+
+RESEND_API_KEY=""
+MAILER_SENDER=""
 ```
 
 3. **Khởi động**

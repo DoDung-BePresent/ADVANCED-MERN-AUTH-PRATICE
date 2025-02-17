@@ -25,18 +25,14 @@ import {
 } from "@/components/ui/input-otp";
 import { useApiError } from "@/hooks/use-api-error";
 import { Loading } from "@/components/Loading";
-import { useAuthContext } from "@/context/auth-provider";
+import { useAuth } from "@/lib/auth-service";
 
 const VerifyMfa = () => {
   const navigate = useNavigate();
-  const { login } = useAuthContext();
+  const { verifyMFA, isVerifyMFAPending } = useAuth();
   const { handleError } = useApiError();
   const [params] = useSearchParams();
   const email = params.get("email");
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: verifyMFALoginMutationFn,
-  });
 
   const form = useForm<z.infer<typeof pinMFASchema>>({
     resolver: zodResolver(pinMFASchema),
@@ -56,9 +52,8 @@ const VerifyMfa = () => {
       email,
     };
 
-    mutate(data, {
+    verifyMFA(data, {
       onSuccess: () => {
-        login();
         navigate("/");
         toast({
           title: "Success",
@@ -89,7 +84,11 @@ const VerifyMfa = () => {
                 <FormItem>
                   <FormLabel className="text-sm">Then enter the code</FormLabel>
                   <FormControl>
-                    <InputOTP disabled={isPending} maxLength={6} {...field}>
+                    <InputOTP
+                      disabled={isVerifyMFAPending}
+                      maxLength={6}
+                      {...field}
+                    >
                       <InputOTPGroup>
                         <InputOTPSlot index={0} className="h-14 w-14 text-lg" />
                         <InputOTPSlot index={1} className="h-14 w-14 text-lg" />
@@ -110,7 +109,7 @@ const VerifyMfa = () => {
               )}
             />
             <Button size="lg" className="w-full">
-              {isPending && <Loading />}
+              {isVerifyMFAPending && <Loading />}
               Verify
             </Button>
           </form>

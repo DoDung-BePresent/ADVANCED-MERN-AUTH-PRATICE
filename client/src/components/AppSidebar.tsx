@@ -27,35 +27,29 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { useAuthContext } from "@/context/auth-provider";
-import { useMutation } from "@tanstack/react-query";
-import { logoutMutationFn } from "@/lib/api";
 import { useTheme } from "@/context/theme-provider";
 import { useApiError } from "@/hooks/use-api-error";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth-service";
 
 export const AppSidebar = () => {
-  const { user, logout } = useAuthContext();
+  const { user, logout, isLogoutPending } = useAuth();
   const { handleError } = useApiError();
   const { theme, setTheme } = useTheme();
 
   const navigate = useNavigate();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: logoutMutationFn,
-    onSuccess: () => {
-      logout();
-      navigate("/sign-in");
-      toast({
-        title: "Success",
-        description: "Logout successfully!",
-      });
-    },
-    onError: handleError,
-  });
-
   const handleLogout = () => {
-    mutate();
+    logout(undefined, {
+      onSuccess: () => {
+        navigate("/sign-in");
+        toast({
+          title: "Success",
+          description: "Logout successfully!",
+        });
+      },
+      onError: handleError,
+    });
   };
 
   const items = [
@@ -70,6 +64,7 @@ export const AppSidebar = () => {
       icon: Settings,
     },
   ];
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -126,9 +121,9 @@ export const AppSidebar = () => {
               Toggle theme
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem disabled={isPending} onClick={handleLogout}>
+            <DropdownMenuItem disabled={isLogoutPending} onClick={handleLogout}>
               <LogOut />
-              Logout
+              {isLogoutPending ? "Logging out..." : "Logout"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

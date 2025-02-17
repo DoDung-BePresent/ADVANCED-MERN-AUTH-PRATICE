@@ -16,18 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LogoIcon from "@/components/logo";
-import { useMutation } from "@tanstack/react-query";
-import { registerMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { useApiError } from "@/hooks/use-api-error";
 import { Loading } from "@/components/Loading";
+import { useAuth } from "@/lib/auth-service";
 
 const SignUp = () => {
   const { handleError } = useApiError();
   const navigate = useNavigate();
-  const { mutate, isPending } = useMutation({
-    mutationFn: registerMutationFn,
-  });
+  const { register, isRegisterPending } = useAuth();
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -38,7 +35,7 @@ const SignUp = () => {
   });
 
   const onSubmit = (values: z.infer<typeof signUpSchema>) => {
-    mutate(values, {
+    register(values, {
       onSuccess: () => {
         navigate("/sign-in");
         toast({
@@ -79,7 +76,7 @@ const SignUp = () => {
                 <FormControl>
                   <Input
                     autoFocus
-                    disabled={isPending}
+                    disabled={isRegisterPending}
                     placeholder="Diana"
                     {...field}
                   />
@@ -96,7 +93,7 @@ const SignUp = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isPending}
+                    disabled={isRegisterPending}
                     type="email"
                     placeholder="demo123@gmail.com"
                     {...field}
@@ -114,7 +111,7 @@ const SignUp = () => {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isPending}
+                    disabled={isRegisterPending}
                     type="password"
                     placeholder="••••••••••••"
                     {...field}
@@ -132,7 +129,7 @@ const SignUp = () => {
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isPending}
+                    disabled={isRegisterPending}
                     type="password"
                     placeholder="••••••••••••"
                     {...field}
@@ -142,8 +139,8 @@ const SignUp = () => {
               </FormItem>
             )}
           />
-          <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <Loading />}
+          <Button disabled={isRegisterPending} type="submit" className="w-full">
+            {isRegisterPending && <Loading />}
             Sign In
           </Button>
         </form>

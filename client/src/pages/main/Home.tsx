@@ -1,10 +1,10 @@
 import EnableMFA from "@/components/mfa/EnableMFA";
 import RevokeMFA from "@/components/mfa/RevokeMFA";
 import { Session } from "@/components/Session";
-import { useAuthContext } from "@/context/auth-provider";
+import { useAuth } from "@/lib/auth-service";
 
 const Home = () => {
-  const { user } = useAuthContext();
+  const { user } = useAuth();
   return (
     <div className="mx-20 mt-14 h-[calc(100vh-56px)] pt-10">
       <div className="mx-auto max-w-screen-xl">

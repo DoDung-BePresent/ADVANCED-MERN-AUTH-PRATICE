@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,18 +18,14 @@ import LogoIcon from "@/components/logo";
 
 import { toast } from "@/hooks/use-toast";
 import { signInSchema } from "@/validations/auth";
-import { loginMutationFn } from "@/lib/api";
 import { useApiError } from "@/hooks/use-api-error";
 import { Loading } from "@/components/Loading";
-import { useAuthContext } from "@/context/auth-provider";
+import { useAuth } from "@/lib/auth-service";
 
 const Login = () => {
-  const { login } = useAuthContext();
+  const { login, isLoginPending } = useAuth();
   const navigate = useNavigate();
   const { handleError } = useApiError();
-  const { mutate, isPending } = useMutation({
-    mutationFn: loginMutationFn,
-  });
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -41,17 +36,12 @@ const Login = () => {
   });
 
   const onSubmit = (values: z.infer<typeof signInSchema>) => {
-    mutate(values, {
-      onSuccess: (res) => {
-        if (res.data?.mfaRequired) {
-          navigate(`/verify-mfa?email=${values.email}`);
-          return;
-        }
-        login();
+    login(values, {
+      onSuccess: () => {
         navigate("/");
         toast({
           title: "Success",
-          description: "Login successfully!",
+          description: "Logged in successfully!",
         });
       },
       onError: handleError,
@@ -87,7 +77,7 @@ const Login = () => {
                 <FormControl>
                   <Input
                     autoFocus
-                    disabled={isPending}
+                    disabled={isLoginPending}
                     type="email"
                     placeholder="demo123@gmail.com"
                     {...field}
@@ -105,7 +95,7 @@ const Login = () => {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isPending}
+                    disabled={isLoginPending}
                     type="password"
                     placeholder="••••••••••••"
                     {...field}
@@ -123,8 +113,8 @@ const Login = () => {
               Forgot your password?
             </Link>
           </div>
-          <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <Loading />}
+          <Button disabled={isLoginPending} type="submit" className="w-full">
+            {isLoginPending && <Loading />}
             Sign In
           </Button>
         </form>

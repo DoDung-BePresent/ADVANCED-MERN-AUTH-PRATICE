@@ -25,10 +25,12 @@ import {
 } from "@/components/ui/input-otp";
 import { useApiError } from "@/hooks/use-api-error";
 import { Loading } from "@/components/Loading";
+import { useAuthContext } from "@/context/auth-provider";
 
 const VerifyMfa = () => {
-  const { handleError } = useApiError();
   const navigate = useNavigate();
+  const { login } = useAuthContext();
+  const { handleError } = useApiError();
   const [params] = useSearchParams();
   const email = params.get("email");
 
@@ -56,6 +58,7 @@ const VerifyMfa = () => {
 
     mutate(data, {
       onSuccess: () => {
+        login();
         navigate("/");
         toast({
           title: "Success",

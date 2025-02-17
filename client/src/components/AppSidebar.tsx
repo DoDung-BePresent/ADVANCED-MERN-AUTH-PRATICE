@@ -28,24 +28,23 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useAuthContext } from "@/context/auth-provider";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { logoutMutationFn } from "@/lib/api";
 import { useTheme } from "@/context/theme-provider";
 import { useApiError } from "@/hooks/use-api-error";
 import { toast } from "@/hooks/use-toast";
 
 export const AppSidebar = () => {
+  const { user, logout } = useAuthContext();
   const { handleError } = useApiError();
-  const { user } = useAuthContext();
   const { theme, setTheme } = useTheme();
 
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
-      queryClient.setQueryData(["authUser"], null);
+      logout();
       navigate("/sign-in");
       toast({
         title: "Success",

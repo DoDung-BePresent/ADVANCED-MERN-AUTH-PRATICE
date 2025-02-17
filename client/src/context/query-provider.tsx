@@ -10,7 +10,6 @@ const QueryProvider = ({ children }: QueryProviderProps) => {
       queries: {
         refetchOnWindowFocus: false,
         retry: false,
-        retryDelay: 0,
         staleTime: 5 * 60 * 1000
       },
     },
